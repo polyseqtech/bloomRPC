@@ -57,6 +57,9 @@ export class GRPCRequest extends EventEmitter {
   send(): GRPCRequest {
     const serviceClient: any = this.protoInfo.client();
     const client: grpc.Client = this.getClient(serviceClient);
+    console.log('grpc')
+    console.log('serviceClient=', serviceClient)
+    console.log('client', client)
     let inputs = {};
     let metadata: {[key: string]: any} = {};
 
@@ -140,6 +143,7 @@ export class GRPCRequest extends EventEmitter {
       } catch(e) {
         return this;
       }
+      console.log('write', inputs)
       this._call.write(inputs);
     }
     return this;
@@ -359,6 +363,9 @@ export class GRPCWebRequest extends EventEmitter {
   send(): GRPCWebRequest {
     const serviceClient: any = this.protoInfo.client();
     const client = new grpcWeb.GrpcWebClientBase({format: 'text'})
+    console.log('grpc web')
+    console.log('serviceClient', serviceClient)
+    console.log('client', client)
     let inputs = {};
     let metadata: {[key: string]: any} = {};
 
@@ -366,9 +373,11 @@ export class GRPCWebRequest extends EventEmitter {
       const reqInfo = this.parseRequestInfo(this.inputs, this.metadata);
       inputs = reqInfo.inputs;
       metadata = reqInfo.metadata;
+      console.log('GRPCWeb  reqInfo=', reqInfo)
     } catch(e) {
       return this;
     }
+
 
     // TODO: find proper type for call
     let call: grpcWeb.ClientReadableStream<any>;
@@ -407,6 +416,10 @@ export class GRPCWebRequest extends EventEmitter {
       throw err;
     }
 
+    console.log('client=', client)
+    console.log('inputs=', inputs)
+    console.log('metadata=', metadata)
+    console.log('methodDescriptor=', methodDescriptor)
     if (this.protoInfo.isServerStreaming()) {
       call = client.serverStreaming(
         fullUrl,
@@ -430,6 +443,7 @@ export class GRPCWebRequest extends EventEmitter {
       this.handleServerStreaming(call, requestStartTime)
     }
 
+    console.log('this._call', call)
     return this;
   }
 
@@ -445,6 +459,7 @@ export class GRPCWebRequest extends EventEmitter {
   }
 
   write() {
+    console.log('write', this)
     return this;
   }
 
@@ -526,6 +541,9 @@ export class GRPCWebRequest extends EventEmitter {
    * @param userMetadata
    */
   private parseRequestInfo(data: string, userMetadata?: string): { inputs: object, metadata: object } {
+    console.log('* JSON转inputs')
+    console.log('data', data)
+    console.log('userMetadata', userMetadata)
     let inputs = {};
     let metadata: {[key: string]: any} = {};
 
@@ -548,7 +566,8 @@ export class GRPCWebRequest extends EventEmitter {
         throw new Error(e);
       }
     }
-
+    console.log('* inputs', inputs)
+    console.log('metadata', metadata)
     return { inputs, metadata };
   }
 }
