@@ -541,7 +541,7 @@ export class GRPCWebRequest extends EventEmitter {
    * @param userMetadata
    */
   private parseRequestInfo(data: string, userMetadata?: string): { inputs: object, metadata: object } {
-    console.log('* JSON转inputs')
+    console.log('*JSON转inputs')
     console.log('data', data)
     console.log('userMetadata', userMetadata)
     let inputs = {};
@@ -566,7 +566,7 @@ export class GRPCWebRequest extends EventEmitter {
         throw new Error(e);
       }
     }
-    console.log('* inputs', inputs)
+    console.log('*inputs', inputs)
     console.log('metadata', metadata)
     return { inputs, metadata };
   }

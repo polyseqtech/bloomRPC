@@ -29,6 +29,7 @@ export const makeRequest = ({ dispatch, state, protoInfo }: ControlsStateProps) 
   dispatch(setIsLoading(true));
 
   let grpcRequest : GRPCEventEmitter
+  console.log('makeRequest标明了请求的类型，是否web')
   if (state.grpcWeb){
     grpcRequest = new GRPCWebRequest({
       url: state.url,
@@ -49,6 +50,7 @@ export const makeRequest = ({ dispatch, state, protoInfo }: ControlsStateProps) 
     });
   }
 
+  console.log('before diapatch setCall', grpcRequest)
   dispatch(setCall(grpcRequest));
 
   // Streaming cleanup
@@ -92,7 +94,9 @@ export const makeRequest = ({ dispatch, state, protoInfo }: ControlsStateProps) 
   });
 
   try {
+    console.log('before page send 。 这里grpcRequest是统一的 ，请求在send阶段构造')
     grpcRequest.send();
+    console.log('after page send')
   } catch(e) {
     console.error(e);
     notification.error({
@@ -106,6 +110,7 @@ export const makeRequest = ({ dispatch, state, protoInfo }: ControlsStateProps) 
       }
     });
     grpcRequest.emit(GRPCEventType.END);
+
   }
 };
 
